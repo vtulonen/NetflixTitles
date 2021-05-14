@@ -79,24 +79,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="netflixTitle.cs">
-      <DependentUpon>NetflixTitlesModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="NetflixTitlesModel.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>NetflixTitlesModel.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="NetflixTitlesModel.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>NetflixTitlesModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="NetflixTitlesModel.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>NetflixTitlesModel.edmx</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -117,13 +99,6 @@
     <None Include="Connections.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <EntityDeploy Include="NetflixTitlesModel.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>NetflixTitlesModel.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <None Include="NetflixTitlesModel.edmx.diagram">
-      <DependentUpon>NetflixTitlesModel.edmx</DependentUpon>
-    </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -137,16 +112,10 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="NetflixTitlesModel.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>NetflixTitlesModel.edmx</DependentUpon>
-      <LastGenOutput>NetflixTitlesModel.Context.cs</LastGenOutput>
-    </Content>
-    <Content Include="NetflixTitlesModel.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>NetflixTitlesModel.edmx</DependentUpon>
-      <LastGenOutput>NetflixTitlesModel.cs</LastGenOutput>
-    </Content>
+    <ProjectReference Include="..\NetflixClassLibrary\NetflixClassLibrary.csproj">
+      <Project>{b2de6aa3-2747-4a2c-9cd9-b2b4eea889e6}</Project>
+      <Name>NetflixClassLibrary</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
