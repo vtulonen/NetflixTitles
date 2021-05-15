@@ -20,20 +20,24 @@
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Column="0" Grid.Row="2">
-            <TextBlock Text="Display" FontSize="24"/>
-            <Button x:Name="All" Content="All" Click="All_Click" />
-            <Button x:Name="Movies" Content="Movies" Click="Movies_Click"/>
-            <Button x:Name="Series" Content="Series" Click="Series_Click"/>
-        </StackPanel>
-        <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="1">
+            <TextBlock Text="Filter" FontSize="24"/>
+            <TextBlock Text="Type" FontSize="24"/>
+            <GroupBox x:Name="RadioButtons">
+                <StackPanel>
+                    <RadioButton x:Name="RadioButtonAll" Content="All" Checked="RadioButton_Checked" IsChecked="True"/>
+                    <RadioButton x:Name="RadioButtonMovies" Content="Movie" Checked="RadioButton_Checked" />
+                    <RadioButton x:Name="RadioButtonTVShow" Content="TV Show" Checked="RadioButton_Checked" />
+                </StackPanel>
+            </GroupBox>
+            
             <TextBlock Text="Country" FontSize="24"/>
-
-            <ComboBox x:Name="ComboBoxCountry" Width="120" />
-
-
-
-
+            <ComboBox x:Name="ComboBoxCountry" DropDownClosed="ComboBoxCountry_DropDownClosed"/>
+            <TextBlock Text="Year" FontSize="24"/>
+            <ComboBox x:Name="ComboBoxYear" DropDownClosed="ComboBoxYear_DropDownClosed"/>
+            <Button x:Name="Update" Click="Update_Click" Content="Update"/>
+            <Button x:Name="ResetFilters" Click="ResetFilters_Click" Content="Reset Filters" />
         </StackPanel>
+
         <TextBlock Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Text="Netflix Titles" FontSize="46" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         <ListBox x:Name="ListBoxNames" Grid.Column="1" Grid.Row="2" MouseDoubleClick="ListBoxNames_MouseDoubleClick"/>
     </Grid>
