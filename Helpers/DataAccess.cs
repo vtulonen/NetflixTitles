@@ -1,10 +1,7 @@
 ﻿using NetflixClassLibrary.EntityModel;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NetflixTitles.Helpers
 {
@@ -41,6 +38,37 @@ namespace NetflixTitles.Helpers
         {
             return new ObservableCollection<T>(enumeration);
         }
+
+        public ObservableCollection<string> GetNetflixTitleNames()
+        {
+            var allTitleNames = dataEntities.netflixTitles.Select(x => x.title);
+            return ToObservableCollection(allTitleNames);
+        }
+
+        public netflixTitle GetNetflixTitleData(string title)
+        {
+            return dataEntities.netflixTitles.First(x => x.title.Equals(title));
+        }
+
+        public ObservableCollection<string> GetFilteredNames(string selectedType, string selectedCountry, string selectedYear)
+        {
+            var allData = dataEntities.netflixTitles.Select(x => x);
+
+            if (selectedType != "All") allData = allData.Where(x => x.type == selectedType);
+            if (selectedCountry != null) allData = allData.Where(x => x.country.Contains(selectedCountry));
+            if (selectedYear != null) allData = allData.Where(x => x.release_year.ToString() == selectedYear);
+
+            var names = allData.Select(x => x.title);
+     
+            return ToObservableCollection(names);
+        }
+
+
+
+
+
+
+
     }
 
 

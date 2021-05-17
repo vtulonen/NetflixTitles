@@ -1,24 +1,12 @@
 ﻿
-using NetflixClassLibrary.EntityModel;
 using NetflixTitles.Helpers;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Data.Linq;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+
 
 namespace NetflixTitles
 {
@@ -29,16 +17,16 @@ namespace NetflixTitles
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
         /// <summary>
-        /// Access db table netflixTitles with dataEntties.netflixTitles
+        ///     DataAccess class provides data with it's methods by querying dataEntities.netflixTitles table in DB
         /// </summary>
-        readonly NetflixDBEntities dataEntities = new NetflixDBEntities();
+        readonly DataAccess da = new DataAccess();
         public event PropertyChangedEventHandler PropertyChanged;
-        DataAccess da = new DataAccess();
+
         private ObservableCollection<string> _names;
 
         public ObservableCollection<string> Countries { get; set; } // Bound to ComboBoxCountry
-        public ObservableCollection<int> Years { get; set; } // Bound to ComboBoxYear
-        public ObservableCollection<string> Names // Bound to ListBoxNames
+        public ObservableCollection<int> Years { get; set; }        // Bound to ComboBoxYear
+        public ObservableCollection<string> Names                   // Bound to ListBoxNames
         {
             get { return _names; }
             set
@@ -54,10 +42,9 @@ namespace NetflixTitles
 
         public MainWindow()
         {
-
             Countries = da.GetUniqueCountries();
             Years = da.GetUniqueYears();
-            Names = da.ToObservableCollection(dataEntities.netflixTitles.Select(x => x.title));
+            Names = da.GetNetflixTitleNames();
             InitializeComponent();
         }
 
@@ -72,15 +59,13 @@ namespace NetflixTitles
         /// <summary>
         ///     Shows the selected netflixTitles description in a messagebox
         /// </summary>
-        /// 
-        // TODO: display more data in different view
         private void ListBoxNames_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             if (ListBoxNames.SelectedItem != null)
             {
-                string selected = ListBoxNames.SelectedItem.ToString();
+                string selectedTitle = ListBoxNames.SelectedItem.ToString();
 
-                var data = dataEntities.netflixTitles.First(x => x.title.Equals(selected));
+                var data = da.GetNetflixTitleData(selectedTitle);
 
                 if (data != null) MessageBox.Show(data.description.ToString());
             }
@@ -91,15 +76,7 @@ namespace NetflixTitles
         /// </summary>
         private void Update_Click(object sender, RoutedEventArgs e)
         {
-            var allTitles = dataEntities.netflixTitles.Select(x => x);
-
-            if (SelectedType != "All") allTitles = allTitles.Where(x => x.type == SelectedType);
-            if (SelectedCountry != null) allTitles = allTitles.Where(x => x.country.Contains(SelectedCountry));
-            if (SelectedYear != null) allTitles = allTitles.Where(x => x.release_year.ToString() == SelectedYear);
-
-            var names = allTitles.Select(x => x.title);
-            Names = da.ToObservableCollection(names);
-
+            Names = da.GetFilteredNames(SelectedType, SelectedCountry, SelectedYear);
         }
 
         private void RadioButton_Checked(object sender, RoutedEventArgs e)
