@@ -4,6 +4,7 @@ using NetflixTitles.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Data.Linq;
 using System.Linq;
 using System.Text;
@@ -25,38 +26,47 @@ namespace NetflixTitles
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, INotifyPropertyChanged
     {
         /// <summary>
         /// Access db table netflixTitles with dataEntties.netflixTitles
         /// </summary>
         readonly NetflixDBEntities dataEntities = new NetflixDBEntities();
- 
-        public ObservableCollection<string> Countries { get; set; } // to display in combobox
-        public ObservableCollection<int> Years { get; set; } // to display in combobox
+        public event PropertyChangedEventHandler PropertyChanged;
+        DataAccess da = new DataAccess();
+        private ObservableCollection<string> _names;
+
+        public ObservableCollection<string> Countries { get; set; } // Bound to ComboBoxCountry
+        public ObservableCollection<int> Years { get; set; } // Bound to ComboBoxYear
+        public ObservableCollection<string> Names // Bound to ListBoxNames
+        {
+            get { return _names; }
+            set
+            {
+                _names = value;
+                RaisePropertyChanged("Names");
+            }
+        }
+
         public string SelectedType { get; set; }
         public string SelectedCountry { get; set; }
         public string SelectedYear { get; set; }
 
-
         public MainWindow()
         {
-            DataAccess da = new DataAccess();
+
             Countries = da.GetUniqueCountries();
             Years = da.GetUniqueYears();
+            Names = da.ToObservableCollection(dataEntities.netflixTitles.Select(x => x.title));
             InitializeComponent();
         }
-        /// <summary>
-        ///     Populates ListBox with all names of all neflixTitles found in db
-        ///     Populates comboboxes with values found in db
-        /// </summary>
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            var query =
-                from netflixTitle in dataEntities.netflixTitles
-                select netflixTitle.title;
 
-            ListBoxNames.ItemsSource = query.ToList();
+        private void RaisePropertyChanged(string propertyName)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
         }
 
         /// <summary>
@@ -88,7 +98,8 @@ namespace NetflixTitles
             if (SelectedYear != null) allTitles = allTitles.Where(x => x.release_year.ToString() == SelectedYear);
 
             var names = allTitles.Select(x => x.title);
-            ListBoxNames.ItemsSource = names.ToList();
+            Names = da.ToObservableCollection(names);
+
         }
 
         private void RadioButton_Checked(object sender, RoutedEventArgs e)
@@ -109,7 +120,7 @@ namespace NetflixTitles
         {
             SelectedYear = ComboBoxYear.Text;
         }
-        
+
         private void ResetFilters_Click(object sender, RoutedEventArgs e)
         {
             RadioButtonAll.IsChecked = true;
