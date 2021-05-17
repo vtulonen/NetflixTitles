@@ -32,11 +32,12 @@ namespace NetflixTitles
         /// </summary>
         readonly NetflixDBEntities dataEntities = new NetflixDBEntities();
  
-        public List<string> Countries { get; set; } // to display in combobox
-        public List<int> Years { get; set; } // to display in combobox
+        public ObservableCollection<string> Countries { get; set; } // to display in combobox
+        public ObservableCollection<int> Years { get; set; } // to display in combobox
         public string SelectedType { get; set; }
         public string SelectedCountry { get; set; }
         public string SelectedYear { get; set; }
+
 
         public MainWindow()
         {
@@ -56,9 +57,6 @@ namespace NetflixTitles
                 select netflixTitle.title;
 
             ListBoxNames.ItemsSource = query.ToList();
-
-            ComboBoxCountry.ItemsSource = Countries;
-            ComboBoxYear.ItemsSource = Years;
         }
 
         /// <summary>

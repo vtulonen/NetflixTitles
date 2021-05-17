@@ -1,6 +1,7 @@
 ﻿using NetflixClassLibrary.EntityModel;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,7 +12,7 @@ namespace NetflixTitles.Helpers
     {
         readonly NetflixDBEntities dataEntities = new NetflixDBEntities();
 
-        public List<string> GetUniqueCountries()
+        public ObservableCollection<string> GetUniqueCountries()
         {
             List<string> uniqueCountries = new List<string>();
             var countriesStrings = dataEntities.netflixTitles.Select(x => x.country).Distinct().Where(x => x != null).ToList();
@@ -26,13 +27,19 @@ namespace NetflixTitles.Helpers
 
             uniqueCountries.Sort();
 
-            return uniqueCountries;
+            return ToObservableCollection(uniqueCountries);
         }
 
 
-        public List<int> GetUniqueYears()
+        public ObservableCollection<int> GetUniqueYears()
         {
-            return dataEntities.netflixTitles.Select(x => x.release_year).Distinct().OrderByDescending(x => x).ToList();
+            var years = dataEntities.netflixTitles.Select(x => x.release_year).Distinct().OrderByDescending(x => x);
+            return ToObservableCollection(years);
+        }
+
+        public ObservableCollection<T> ToObservableCollection<T>(IEnumerable<T> enumeration)
+        {
+            return new ObservableCollection<T>(enumeration);
         }
     }
 

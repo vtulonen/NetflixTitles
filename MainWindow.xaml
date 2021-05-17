@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:NetflixTitles"
         mc:Ignorable="d"
         Title="MainWindow" Height="600" Width="900"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}"
         Loaded="Window_Loaded"
     >
     <Grid>
@@ -31,9 +32,9 @@
             </GroupBox>
             
             <TextBlock Text="Country" FontSize="24"/>
-            <ComboBox x:Name="ComboBoxCountry" DropDownClosed="ComboBoxCountry_DropDownClosed"/>
+            <ComboBox x:Name="ComboBoxCountry" ItemsSource="{Binding Countries}" DropDownClosed="ComboBoxCountry_DropDownClosed"/>
             <TextBlock Text="Year" FontSize="24"/>
-            <ComboBox x:Name="ComboBoxYear" DropDownClosed="ComboBoxYear_DropDownClosed"/>
+            <ComboBox x:Name="ComboBoxYear"  ItemsSource="{Binding Years}" DropDownClosed="ComboBoxYear_DropDownClosed"/>
             <Button x:Name="Update" Click="Update_Click" Content="Update"/>
             <Button x:Name="ResetFilters" Click="ResetFilters_Click" Content="Reset Filters" />
         </StackPanel>
